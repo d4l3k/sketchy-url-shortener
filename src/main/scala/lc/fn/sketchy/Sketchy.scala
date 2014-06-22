@@ -35,11 +35,11 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
   }
   get("/") {
     contentType = "text/html"
-    ssp("/WEB-INF/views/index.jade", "lists" -> words.keys.toList)
+    ssp("/WEB-INF/views/index.jade", "lists" -> words)
   }
   get("/short") {
     contentType = "text/html"
-    ssp("/WEB-INF/views/index.jade", "lists" -> words.keys.toList)
+    ssp("/WEB-INF/views/index.jade", "lists" -> words)
   }
   post("/new") {
     contentType = "text/html"

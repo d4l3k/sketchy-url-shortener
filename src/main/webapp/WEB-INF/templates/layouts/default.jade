@@ -9,15 +9,12 @@ html
     link(href="/css/main.css" rel="stylesheet")
   body
     .container
-      h1
-        a(href="http://fn.lc") function Look()
-        | {
+      header
+        a(href="http://fn.lc") fn.lc/
         a(href="/short") Sketchy.shorten
-        | (
-        = headline
-        | ) }
-      hr
-      != body
-      hr
-      | Copyright (C) 2014 Tristan Rice. Licensed under the MIT license.
-      a(href="https://google.com/sketchy-url-shortener") Source Code
+        | ( #{headline} );
+      .bod
+        != body
+      footer
+        | Copyright (C) 2014 Tristan Rice. Licensed under the MIT license.
+        a(href="https://github.com/d4l3k/sketchy-url-shortener") Source Code
