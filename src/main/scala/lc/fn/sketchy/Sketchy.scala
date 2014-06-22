@@ -35,7 +35,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
       to = Some("http://"+to.get)
     }
     to match {
-      case Some(s) => redirect(s)
+      case Some(s) => halt(status = 301, headers = Map("Location" -> s))
       case None => halt(404, <h1>Url Not Found</h1>)
     }
   }
