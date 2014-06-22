@@ -17,7 +17,7 @@ body {
   background-color: white;
   border: 1px solid rgba(0,0,0,0.08);
 }
-input, select {
+input, select, button {
   padding: 6px 12px;
   border-radius: 4px;
   border: 1px solid rgba(0,0,0,0.2);
@@ -25,6 +25,10 @@ input, select {
 }
 input[type='text'], select, input[type='number'] {
   width: 100%;
+}
+input[type='submit']:hover, button:hover {
+  background-color: #FAFAFA;
+  cursor: pointer;
 }
 form > div {
   margin-left: -15px;
