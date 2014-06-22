@@ -1,0 +1,17 @@
+-@ val lists: List[String]
+- attributes("title") = "lc.fn.sketchy: a sketchy url shortener"
+- attributes("headline") = "URL"
+
+form(action='/new' method='post')
+  input(name='url' type='text' placeholder="URL")
+  br
+  | Word Lists:
+  br
+  select(name="lists" size={lists.length} multiple)
+    - for(list <- lists)
+      option(value=list selected={list=="nsa_watchlist.txt"})= list
+  br
+  input(name="base62" type='checkbox' value="yes") Normal (Base62)
+  input(name="hidden" type='text')
+  br
+  input(type='submit' value='Shorten')

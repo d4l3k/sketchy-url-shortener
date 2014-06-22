@@ -6,7 +6,17 @@
 html
   head
     title= title
+    link(href="/css/main.css" rel="stylesheet")
   body
-    #content
-      h1= headline
+    .container
+      h1
+        a(href="http://fn.lc") function Look()
+        | {
+        a(href="/short") Sketchy.shorten
+        | (
+        = headline
+        | ) }
+      hr
       != body
+      hr
+      | Copyright (C) 2014 Tristan Rice. Licensed under the MIT license.

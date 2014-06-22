@@ -9,7 +9,7 @@ object SketchyUrlShortenerBuild extends Build {
   val Organization = "lc.fn"
   val Name = "Sketchy URL Shortener"
   val Version = "0.1.0-SNAPSHOT"
-  val ScalaVersion = "2.11.1"
+  val ScalaVersion = "2.10.0"
   val ScalatraVersion = "2.3.0"
 
   lazy val project = Project (
@@ -27,7 +27,9 @@ object SketchyUrlShortenerBuild extends Build {
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
         "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container",
-        "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar"))
+        "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar")),
+        "net.debasishg" % "redisclient_2.10" % "2.12",
+        "com.github.tototoshi" %% "scala-base62" % "0.1.0"
       ),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
         Seq(
