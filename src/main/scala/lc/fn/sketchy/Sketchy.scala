@@ -73,10 +73,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     getUrl(words.keys.toList, 8)
   }
   def randWord(lists: List[String]): String = {
-    var tmp_words:List[String] = List()
-    for(list <- lists){
-      tmp_words = words(list) ::: tmp_words
-    }
+    val tmp_words = (for ( list <- lists ) yield words(list)).flatten
     tmp_words(rand.nextInt(tmp_words.length))
   }
   def messCase(word: String): String = {
