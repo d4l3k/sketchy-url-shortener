@@ -53,7 +53,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     var short = ""
     params.get("base62") match {
       case Some(s) => {
-        val num = r.incr("sketch_latestid")
+        val num = r.incr("sketchy:latestid")
         short = base62.encode(num.last)
       }
       case None => {
