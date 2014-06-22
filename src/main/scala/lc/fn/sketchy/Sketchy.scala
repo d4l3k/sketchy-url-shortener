@@ -2,6 +2,7 @@ package lc.fn.sketchy
 
 import org.scalatra._
 import scalate.ScalateSupport
+import scala.collection.JavaConversions._
 import scala.io.Source
 import scala.util.Random
 import com.github.tototoshi.base62.Base62
@@ -26,7 +27,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
   }
   get("/:url") {
     val url = params("url")
-    val to = r.get("sketchy_url:"+url)
+    val to = r.get("sketchy:url:"+url)
     to match {
       case Some(s) => redirect(s)
       case None => halt(404, <h1>Url Not Found</h1>)
@@ -44,8 +45,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     contentType = "text/html"
     val url = params("url")
     val hidden = params("hidden")
-    val lists = params("lists")
-    println(params.keys.mkString("[", ", ","]"))
+    val lists = request.getParameterValues("lists").toList
     if(hidden.length > 0){
       halt(403, "NOPE")
     }
@@ -56,10 +56,10 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
         short = base62.encode(num.last)
       }
       case None => {
-        short = getUrl(words.keys.toList)
+        short = getUrl(lists)
       }
     }
-    r.set("sketchy_url:"+short, url)
+    r.set("sketchy:url:"+short, url)
     ssp("/WEB_INF/views/new.jade", "url" -> url, "short" -> ("http://fn.lc/"+short))
   }
   get("/test") {
@@ -72,18 +72,27 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     }
     tmp_words(rand.nextInt(tmp_words.length))
   }
+  def messCase(word: String): String = {
+    rand.nextInt(3) match {
+      case 0 => word.toLowerCase
+      case 1 => word.toLowerCase.split(" ").map(_.capitalize).mkString(" ")
+      case 2 => word
+    }
+  }
   def getUrl(lists: List[String]): String = {
-    var url = randWord(lists)
-    for(v <- 1 to rand.nextInt(4) ) {
-      url += "_"+randWord(lists)
+    var parts:List[String] = List()
+    for(v <- 0 to rand.nextInt(8) ) {
+      parts = messCase(randWord(lists)).replaceAll(" ", "-") :: parts
     }
-    val num = r.incr("sketch_latestid")
-    url += "_" + base62.encode(num.last)
-    for(v <- 1 to rand.nextInt(4) ) {
-      url += "_"+randWord(lists)
-    }
+    val num = r.incr("sketchy:latestid")
+    parts = insertAt(base62.encode(num.last), rand.nextInt(parts.length + 1), parts)
+    var url = parts.mkString("_")
     url += "."+endings(rand.nextInt(endings.length))
-    url = url.replaceAll(" ", "_")//.toLowerCase
+    //url = url.replaceAll(" ", "_")//.toLowerCase
+    //url = url.flatMap { case ' ' => "_-.".charAt(rand.nextInt(3)).toString case c => c.toString }
     url
+  }
+  def insertAt[A](e: A, n: Int, ls: List[A]): List[A] = ls.splitAt(n) match {
+    case (pre, post) => pre ::: e :: post
   }
 }
