@@ -11,6 +11,9 @@ form(action='/new' method='post')
     - for(list <- lists)
       option(value=list selected={list=="nsa_watchlist.txt"})= list
   br
+  | Number of words:
+  input(name="words" type="number" value="8")
+  br
   input(name="base62" type='checkbox' value="yes") Normal (Base62)
   input(name="hidden" type='text')
   br
