@@ -8,7 +8,8 @@ form(action='/new' method='post')
     .col-sm-10
       input(name='url' type='text' placeholder="URL")
   div
-    .col-sm-2 Word Lists
+    .col-sm-2
+      a(href="https://github.com/d4l3k/sketchy-url-shortener/tree/master/words") Word Lists
     .col-sm-10
       select(name="lists" size={lists.keys.toList.length} multiple)
         - for(list <- lists.keys.toList)
