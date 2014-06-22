@@ -29,7 +29,8 @@ object SketchyUrlShortenerBuild extends Build {
         "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container",
         "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar")),
         "net.debasishg" % "redisclient_2.10" % "2.12",
-        "com.github.tototoshi" %% "scala-base62" % "0.1.0"
+        "com.github.tototoshi" %% "scala-base62" % "0.1.0",
+        "com.netaporter" %% "scala-uri" % "0.4.2"
       ),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
         Seq(

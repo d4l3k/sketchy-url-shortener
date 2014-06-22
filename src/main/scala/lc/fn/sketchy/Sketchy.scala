@@ -6,6 +6,8 @@ import scala.collection.JavaConversions._
 import scala.io.Source
 import scala.util.Random
 import com.github.tototoshi.base62.Base62
+import com.netaporter.uri.dsl._
+import com.netaporter.uri.Uri.parse
 import com.redis._
 
 class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
@@ -27,7 +29,11 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
   }
   get("/:url") {
     val url = params("url")
-    val to = r.get("sketchy:url:"+url)
+    var to = r.get("sketchy:url:"+url)
+    val uri = parse(to.get)
+    if(uri.host == None){
+      to = Some("http://"+to.get)
+    }
     to match {
       case Some(s) => redirect(s)
       case None => halt(404, <h1>Url Not Found</h1>)
