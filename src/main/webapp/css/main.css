@@ -37,6 +37,8 @@ form > div {
   color: white;
   font-weight: bold;
   line-height: 1.2;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
   font-size: 30px;
 }
 .col-sm-2, .col-sm-10 {
