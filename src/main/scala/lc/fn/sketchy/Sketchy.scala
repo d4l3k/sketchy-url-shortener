@@ -73,7 +73,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     getUrl(words.keys.toList, 8)
   }
   def randWord(lists: List[String]): String = {
-    val tmp_words = (for ( list <- lists ) yield words(list)).flatten
+    val tmp_words = lists.flatMap(words(_))//(for ( list <- lists ) yield words(list)).flatten
     tmp_words(rand.nextInt(tmp_words.length))
   }
   def messCase(word: String): String = {
@@ -96,7 +96,8 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     //url = url.flatMap { case ' ' => "_-.".charAt(rand.nextInt(3)).toString case c => c.toString }
     url
   }
-  def insertAt[A](e: A, n: Int, ls: List[A]): List[A] = ls.splitAt(n) match {
-    case (pre, post) => pre ::: e :: post
+  def insertAt[A](e: A, n: Int, ls: List[A]): List[A] = {
+    val(pre, post) = ls.splitAt(n)
+    pre ::: e :: post
   }
 }
