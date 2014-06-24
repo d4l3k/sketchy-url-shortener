@@ -53,6 +53,9 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     val hidden = params("hidden")
     val lists = request.getParameterValues("lists").toList
     var word_count = params("words").toInt
+    if(word_count > 100){
+      word_count = 100
+    }
     if(hidden.length > 0){
       halt(403, "NOPE")
     }
