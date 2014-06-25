@@ -33,7 +33,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
     to match {
       case Some(s) => {
         val uri = parse(s)
-        if(uri.host == None){
+        if(uri.protocol == None){
           to = Some("http://"+s)
         }
         halt(status = 301, headers = Map("Location" -> s))
