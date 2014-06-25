@@ -2,7 +2,7 @@ package lc.fn.sketchy
 
 import org.scalatra._
 import scalate.ScalateSupport
-import scala.collection.JavaConversions._
+import scala.collection.immutable.Map
 import scala.io.Source
 import scala.util.Random
 import com.github.tototoshi.base62.Base62
@@ -15,18 +15,18 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
   val base62 = new Base62
   val files = new java.io.File("words").listFiles
   val rand = new Random
-  var words:Map[String,List[String]] = Map()
   var endings = List("mkv", "mp4", "dll", "exe", "so", "out", "kmod", "msi", "msp", "jar", "bat", "cmd", "py", "sh", "vbs", "pdf", "rb")
-  for(file <- files) {
-    val name = file.getName
-    var tmp_words:List[String] = List()
-    for(line <- Source.fromFile(file).getLines) {
-      if(line.length > 0 && line.head != '#') {
-        tmp_words = line.split(",").map(x => x.trim).toList ::: tmp_words
-      }
+  val words: Map[String, List[String]] = {
+    def getWordsFromFile(file: java.io.File): List[String] = {
+      Source.fromFile(file).getLines
+        .filter(line => line.length > 0 && line.head != '#')
+        .flatMap(_.split(","))
+        .map(_.trim)
+        .toList
     }
-    words += (name -> tmp_words)
+    files.map(file => (file.getName, getWordsFromFile(file))).toMap
   }
+
   get("/:url") {
     val url = params("url")
     var to = r.get("sketchy:url:"+url)
