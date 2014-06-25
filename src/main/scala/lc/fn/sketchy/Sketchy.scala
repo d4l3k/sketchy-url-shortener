@@ -30,12 +30,14 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
   get("/:url") {
     val url = params("url")
     var to = r.get("sketchy:url:"+url)
-    val uri = parse(to.get)
-    if(uri.host == None){
-      to = Some("http://"+to.get)
-    }
     to match {
-      case Some(s) => halt(status = 301, headers = Map("Location" -> s))
+      case Some(s) => {
+        val uri = parse(s)
+        if(uri.host == None){
+          to = Some("http://"+s)
+        }
+        halt(status = 301, headers = Map("Location" -> s))
+      }
       case None => halt(404, <h1>Url Not Found</h1>)
     }
   }
