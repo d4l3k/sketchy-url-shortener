@@ -4,6 +4,8 @@ import org.scalatra.sbt._
 import org.scalatra.sbt.PluginKeys._
 import com.mojolly.scalate.ScalatePlugin._
 import ScalateKeys._
+import sbtassembly.Plugin._
+import sbtassembly.Plugin.AssemblyKeys._
 
 object SketchyUrlShortenerBuild extends Build {
   val Organization = "lc.fn"
@@ -11,6 +13,32 @@ object SketchyUrlShortenerBuild extends Build {
   val Version = "0.1.0-SNAPSHOT"
   val ScalaVersion = "2.10.0"
   val ScalatraVersion = "2.3.0"
+
+  // settings for sbt-assembly plugin
+  val myAssemblySettings = assemblySettings ++ Seq(
+
+    // handle conflicts during assembly task
+    mergeStrategy in assembly <<= (mergeStrategy in assembly) {
+      (old) => {
+        case "about.html" => MergeStrategy.first
+        case x => old(x)
+      }
+    },
+
+    test in assembly := {},
+
+    // copy web resources to /webapp folder
+    resourceGenerators in Compile <+= (resourceManaged, baseDirectory) map {
+      (managedBase, base) =>
+        val webappBase = base / "src" / "main" / "webapp"
+        for {
+          (from, to) <- webappBase ** "*" x rebase(webappBase, managedBase / "main" / "webapp")
+        } yield {
+          Sync.copy(from, to)
+          to
+        }
+    }
+  )
 
   lazy val project = Project (
     "sketchy-url-shortener",
@@ -26,8 +54,8 @@ object SketchyUrlShortenerBuild extends Build {
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
-        "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container",
-        "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar")),
+        "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910" % "container;compile",
+        "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided" artifacts (Artifact("javax.servlet", "jar", "jar")),
         "net.debasishg" % "redisclient_2.10" % "2.12",
         "com.github.tototoshi" %% "scala-base62" % "0.1.0",
         "com.netaporter" %% "scala-uri" % "0.4.2"
@@ -45,5 +73,5 @@ object SketchyUrlShortenerBuild extends Build {
         )
       }
     )
-  )
+  ).settings(myAssemblySettings:_*)
 }

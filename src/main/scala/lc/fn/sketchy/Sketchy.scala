@@ -70,7 +70,7 @@ class Sketchy extends SketchyUrlShortenerStack with ScalateSupport {
       }
     }
     r.set("sketchy:url:"+short, url)
-    ssp("/WEB_INF/views/new.jade", "url" -> url, "short" -> ("http://fn.lc/"+short))
+    ssp("/WEB_INF/views/new.jade", "url" -> url, "short" -> ("https://fn.lc/"+short))
   }
   get("/test") {
     getUrl(words.keys.toList, 8)
