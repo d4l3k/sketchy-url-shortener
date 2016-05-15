@@ -1,17 +1,14 @@
 # Sketchy URL Shortener
 
-http://fn.lc/short
+https://fn.lc/short
 
 ## Build & Run
 
 ```sh
-$ cd Sketchy_URL_Shortener
-$ ./sbt
-> container:start
-> browse
+$ go get -u github.com/d4l3k/sketchy-url-shortener
+$ cd $GOPATH/src/github.com/d4l3k/sketch-url-shortener
+$ sketchy-url-shortener -host="https://fn.lc/"
 ```
-
-If `browse` doesn't launch your browser, manually open [http://localhost:8080/](http://localhost:8080/) in your browser.
 
 ## Word Lists
 `nsa_watchlist.txt` is the keywords the NSA looks for. [Source](http://www.businessinsider.com/nsa-prism-keywords-for-domestic-spying-2013-6)

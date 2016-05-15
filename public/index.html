@@ -1,0 +1,92 @@
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+  <title>Sketchy URL Shortener</title>
+<style>
+body {
+  background-color: #444;
+}
+.container {
+  width: 640px;
+  max-width: 100%;
+  padding: 100px 20px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+p a {
+  word-wrap: break-word;
+}
+.mdl-textfield {
+  width: 100%;
+}
+.mdl-card {
+  width: 100%;
+}
+h6 {
+  margin: 0;
+  color: rgb(63,81,181);
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Sketchy URL Shortener</h2>
+      </div>
+      <div class="mdl-card__supporting-text">
+        {{if .Index}}
+        <form action="/new" method="post">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="url" name="url">
+            <label class="mdl-textfield__label" for="url">URL</label>
+          </div>
+          <div>
+          <h6>Word Lists</h6>
+          <select name="lists" size="5" multiple="multiple">
+            {{range .WordFiles}}
+            <option value="{{.Name}}"
+                    {{if eq .Name "nsa_watchlist.txt"}}selected="selected"{{end}}
+            >
+            {{.Name}}
+            ({{.Words | len}} terms)
+            {{end}}
+            </option>
+          </select>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="words" name="words" value="8">
+            <label class="mdl-textfield__label" for="words">Max words</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="normal">
+            <input type="checkbox" id="normal" class="mdl-switch__input" name="normal">
+            <span class="mdl-switch__label">Normal (base62)</span>
+          </label>
+          <br><br>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            Shorten!
+          </button>
+        </form>
+        {{end}}
+        {{if .NotFound}}
+        <p>Error 404. File Not Found.</p>
+        {{end}}
+        {{if .Shortened}}
+        <p>
+        Shortened
+        <a href="{{.From}}">{{.From}}</a>
+        to
+        <a href="{{.To}}">{{.To}}</a>.
+        </p>
+        {{end}}
+      </div>
+      <div class="mdl-card__actions mdl-card--border">
+        Made by <a href="https://fn.lc">Tristan Rice</a>.
+      </div>
+    </div>
+  </div>
+
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+</body>
