@@ -128,13 +128,14 @@ func New(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		case 0:
 			words[i] = strings.ToLower(word)
 		case 1:
-			words[1] = strings.ToUpper(word)
+			words[i] = strings.ToUpper(word)
 		}
 	}
 
-	ext := "." + endings[rand.Intn(len(endings))]
-
-	newURL := strings.Replace(strings.Join(words, "_"), " ", "_", -1) + ext
+	newURL := strings.Replace(strings.Join(words, "_"), " ", "_", -1)
+	if len(words) > 1 {
+		newURL += "." + endings[rand.Intn(len(endings))]
+	}
 
 	parsed, err := url.Parse(r.Form.Get("url"))
 	if err != nil {
