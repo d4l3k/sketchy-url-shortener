@@ -2,6 +2,12 @@
 
 https://fn.lc/short
 
+## Running on Docker (port 8080)
+
+```bash
+docker run --net=host -d --restart=always d4l3k/sketchy-url-shortener app -listen=":8080" -host="https://fn.lc/"
+```
+
 ## Build & Run
 
 ```sh
