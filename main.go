@@ -12,10 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	"gopkg.in/redis.v3"
-
 	"github.com/julienschmidt/httprouter"
 	"github.com/pilu/go-base62"
+	"gopkg.in/redis.v4"
 )
 
 var host = flag.String("host", "https://fn.lc/", "the default web host")
