@@ -12,13 +12,18 @@ import (
 	"strconv"
 	"strings"
 
+	auth "github.com/abbot/go-http-auth"
 	"github.com/julienschmidt/httprouter"
 	"github.com/pilu/go-base62"
 	"gopkg.in/redis.v4"
 )
 
-var host = flag.String("host", "https://fn.lc/", "the default web host")
-var listen = flag.String("listen", ":8080", "the address to listen on")
+var (
+	host     = flag.String("host", "https://fn.lc/", "the default web host")
+	listen   = flag.String("listen", ":8080", "the address to listen on")
+	username = flag.String("username", "admin", "username")
+	password = flag.String("password", "$2a$10$z7GjFbeuezmBS70aZ9alreuhfOXHbRcazo2Tg54p.2GdOu6Ij/XgG", "password")
+)
 
 var endings = []string{"mkv", "mp4", "dll", "exe", "so", "dmg", "msi", "jar", "bat", "cmd", "py", "sh", "pdf"}
 
@@ -159,6 +164,22 @@ func New(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 var client *redis.Client
 
+func secret(user, realm string) string {
+	if user == *username {
+		return *password
+	}
+	return ""
+}
+
+func wrapAuth(authenticator auth.AuthenticatorInterface, f httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		wrapped := authenticator.Wrap(func(w http.ResponseWriter, ar *auth.AuthenticatedRequest) {
+			f(w, r, ps)
+		})
+		wrapped.ServeHTTP(w, r)
+	}
+}
+
 func main() {
 	flag.Parse()
 
@@ -171,9 +192,11 @@ func main() {
 		DB:       0,  // use default DB
 	})
 
+	authenticator := auth.NewBasicAuthenticator("Login", secret)
+
 	router := httprouter.New()
 	router.GET("/", Index)
-	router.POST("/new", New)
+	router.POST("/new", wrapAuth(authenticator, New))
 	router.GET("/:file", Get)
 
 	log.Printf("Listening on %s...", *listen)
